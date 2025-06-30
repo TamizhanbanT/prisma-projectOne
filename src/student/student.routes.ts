@@ -1,24 +1,19 @@
 import express from "express";
 import * as studentController from "./student.controller";
+import { validate } from "../middleware/validate";
+import {
+  studentSchema,
+  updateStudentSchema,
+  studentArraySchema,
+} from "../student/studentValidator"
 
 const router = express.Router();
 
-// Create
-router.post("/", studentController.createStudent);
-
-// Read all
+router.post("/", validate(studentSchema), studentController.createStudent);
 router.get("/", studentController.getAllStudents);
-
-// Read one
 router.get("/:id", studentController.getStudentById);
-
-// Update
-router.put("/:id", studentController.updateStudent);
-
-// Delete
+router.put("/:id", validate(updateStudentSchema), studentController.updateStudent);
 router.delete("/:id", studentController.deleteStudent);
-
-router.post("/bulk", studentController.createManyStudents);
-
+router.post("/bulk", validate(studentArraySchema), studentController.createManyStudents);
 
 export default router;
